@@ -14,7 +14,6 @@ def combineHorizontaly(A,B):
     shB=np.shape(B);
     colTot=shA[1]+shB[1];
     rowMax=np.max((shA[0],shB[0]));
-    colMax=np.max((shA[1],shB[1]));
     CHorz=np.zeros((rowMax,colTot));
     CHorz[0:shA[0],0:shA[1]]=A;
     CHorz[0:shB[0],shA[1]:colTot]=B;
@@ -36,9 +35,7 @@ def getFeatures():
     feats = getFeatsPCA();
     feats = combineHorizontaly(feats,getFeatsTSNE());
     feats = combineHorizontaly(feats,getFeatsIsomap());
-    print(feats);
-    print(feats.shape[0]);
-    print(feats.shape[1]);
+    return feats;
 
 getFeatures();
 
