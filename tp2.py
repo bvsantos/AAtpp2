@@ -3,6 +3,7 @@ from sklearn.decomposition import PCA;
 import numpy as np;
 from tp2_aux import images_as_matrix;
 from sklearn.manifold import Isomap;
+from sklearn.cluster import DBSCAN;
 from sklearn.preprocessing import StandardScaler;
 from sklearn.cluster import KMeans;
 from sklearn.metrics import silhouette_score;
@@ -63,15 +64,22 @@ def neighbor(feats):
     return orderedMaxD;
 
 def bestKMeans(feats):
-    resultados = [];
+    results = [];
     for n_clusters in range(2,30):
         region = KMeans(n_clusters=n_clusters).fit(feats);
         randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
-        resultados.append([n_clusters,rendIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
-    resultados = np.array(resultados);
-    return resultados;
-        
-getFeatures();
+        results.append([n_clusters,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
+    results = np.array(results);
+    return results;
+
+def bestDBScan(feats):
+    results = [];
+    for epsil in range(10,50):
+        region = DBSCAN(eps=epsil, min_samples=5).fit(feats);
+        randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
+        results.append([epsil,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
+    results = np.array(results);
+    return results;
 
 def drawGraph(orderedMaxD):
     plt.rcParams['axes.facecolor'] = 'lightgrey';
