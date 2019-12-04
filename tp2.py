@@ -8,6 +8,7 @@ from sklearn.cluster import KMeans;
 from sklearn.metrics import silhouette_score;
 from sklearn.neighbors import KNeighborsClassifier;
 import matplotlib.pyplot as plt;
+from sklearn.metrics.cluster import adjusted_rand_score;
 
 matrix = images_as_matrix();
 scaler = StandardScaler();
@@ -22,6 +23,19 @@ def combineHorizontaly(A,B):
     CHorz[0:shA[0],0:shA[1]]=A;
     CHorz[0:shB[0],shA[1]:colTot]=B;
     return CHorz;
+
+def computeAlgRand(labels, noLabel):
+    trueP = trueN = sameC = sameP = 0.0;
+    for i in range(len(labels)-1):
+        sameC= np.sum(labels[i] == labels[i+1:]);
+        sameP = np.sum(noLabel[i] == noLabel[i+1:]);
+        trueP += np.sum(np.logical_and(sameC, sameP));
+        trueN += np.sum(np.logical_not(np.logical_or(sameC, sameP)));
+    rand = (trueP+trueN)/((len(labels)*(len(labels)-1))/2);
+    precision = trueP/sameC;
+    recall = trueP/sameP;
+    f1measure = 2*((precision*recall)/(precision+recall));
+    return rand, precision, recall, f1measure, adjusted_rand_score(labels, noLabel);
 
 def getFeatsPCA():
     pca = PCA(n_components=6);
