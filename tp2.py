@@ -4,6 +4,8 @@ import numpy as np;
 from tp2_aux import images_as_matrix;
 from sklearn.manifold import Isomap;
 from sklearn.preprocessing import StandardScaler;
+from sklearn.cluster import KMeans;
+from sklearn.metrics import silhouette_score;
 
 matrix = images_as_matrix();
 scaler = StandardScaler();
@@ -37,6 +39,15 @@ def getFeatures():
     feats = combineHorizontaly(feats,getFeatsIsomap());
     return feats;
 
+def bestKMeans(feats):
+    resultados = [];
+    for n_clusters in range(2,30):
+        region = KMeans(n_clusters=n_clusters).fit(feats);
+        randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
+        resultados.append([n_clusters,rendIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
+    resultados = np.array(resultados);
+    return resultados;
+        
 getFeatures();
 
 #standartscaler
