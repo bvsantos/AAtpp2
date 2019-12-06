@@ -15,6 +15,16 @@ matrix = images_as_matrix();
 scaler = StandardScaler();
 scaledMatrix = scaler.fit_transform(matrix);
 
+def readFromFile(fileName):
+    text = open(fileName).readlines();
+    values=[];
+    for lin in text:
+        va = lin.split(",");
+        values.append(va[1].split('\n')[0]);
+    return values;
+labels = readFromFile("labels.txt");
+print(labels);
+
 def combineHorizontaly(A,B):
     shA=np.shape(A);
     shB=np.shape(B);
@@ -89,7 +99,7 @@ def drawGraph(orderedMaxD):
     plt.plot(range(len(orderedMaxD)), orderedMaxD, '-r');
     plt.show();
     
-drawGraph(neighbor(getFeatures()));
+#drawGraph(neighbor(getFeatures()));
 
 #standartscaler
     
