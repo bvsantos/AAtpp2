@@ -30,15 +30,19 @@ R4: São muitos poucos clusters o que nos leva a não achar este resultado adequ
 
 Q5: Descreva a sua análise dos parâmetros k (para K-Means) e epsilon (para DBSCAN) usando os indicadores internos e externos indicados no enunciado. Inclua os dois gráficos com os valores dos indicadores (indicando o nome da imagem de cada plot numa linha da resposta) em função dos parâmetros k e epsilon e descreva a escolha dos intervalos nos quais examinou estes parâmetros. Indique, justificando, que conclusões pode tirar desta análise.
 R5: O parâmetro usado para escolher o melhor valor de k e epsilon foi a precision.
+    Gráficos:
+        Kmeans stats.jpg
+        DbScan stats.png
 
 Q6: Seleccione alguns valores dos parâmetros testados na questão cinco e examine os clusters correspondentes com mais atenção, gerando o ficheiro HTML com as imagens. Justifique a escolha destes valores, discuta as diferentes opções e proponha uma recomendação que poderia ajudar a tarefa dos biólogos de classificar as células e rejeitar erros de segmentação.
-R6: Só analizamos a precision.
+R6: Só analisamos a precision com o melhor valor porque achamos que era o mais correto. O k means tenta criar clusters do mesmo tamanho sem se importar com a distrubuição dos dadose não trabalha bem com estruturas de dados não globais, problema resolvido pelo DBSAN
+
 
 Q7: Discuta vantagens, problemas ou otros aspectos destes dois algoritmos (K-Means e DBSCAN) que considere relevantes para ajudar os biólogos a organizar estas imagens, considerando o seu conhecimento teórico destes algoritmos bem como os resultados que obteve no seu trabalho.
-R7: 
+R7: Silhouette Score:  0.19675217708397524 do DBSCAN e Silhouette Score:  0.2369509268372312 para o K-means.
 
 Q8: Considere outros algoritmos de clustering implementados na biblioteca Scikit-Learn. Escolha um e aplique-o a este problema, optimizando os parâmetros que julgar adequado da forma que lhe parecer melhor. Justifique a sua escolha e discuta se esta opção daria resultados mais úteis para os biólogos.
-R8:
+R8:O algoritmo considerado seria o Gaussian Mix optimizando o parâmetro n_components.
 
 Q9: (Opcional) Implemente o algoritmo de clustering hierárquico Bissecting K-Means, conforme descrito na página do enunciado e na Aula 19. Examine e discuta os resultados e sua aplicação ao problema de ajudar os biólogos a selecionar e classificar imagens de células.
 R9:

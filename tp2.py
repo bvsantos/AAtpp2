@@ -81,8 +81,7 @@ def neighbor(feats):
 
 def bestKMeans(feats):
     results = [];
-    bestP = 0;
-    bestK = 2;
+    bestP = 0.0;
     bestLabels = []
     for n_clusters in range(2,9):
         region = KMeans(n_clusters=n_clusters).fit_predict(feats);
@@ -90,32 +89,28 @@ def bestKMeans(feats):
         results.append([n_clusters,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
         if bestP<=precision:
             bestP = precision
-            bestK = n_clusters
             bestLabels = region
     results = np.array(results);
-    #drawAlgStats(results, 'Kmeans stats');
-    print(bestK)
+    drawAlgStats(results, 'Kmeans stats');
     report_clusters(ids,bestLabels,"KMeans.html");
-    return results;
+    return bestLabels;
 
 def bestDBScan(feats):
     results = [];
-    bestEpsil = bestPrecision= 0.0;
+    bestPrecision= 0.0;
     bestL = [];
     for epsil in range(30,50):
         region = DBSCAN(eps=epsil, min_samples=5).fit_predict(feats);
         randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region,labels);
         if precision > bestPrecision:
                 bestPrecision = precision;
-                bestEpsil = epsil;
                 bestL = region;
         results.append([epsil,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
     results = np.array(results);
 
-    #drawAlgStats(results, 'DbScan stats');
-    print(bestEpsil)
+    drawAlgStats(results, 'DbScan stats');
     report_clusters(ids,bestL,"DBscan.html")
-    return bestEpsil,bestL;
+    return bestL;
 
 def drawGraph(orderedMaxD):
     plt.rcParams['axes.facecolor'] = 'lightgrey';
@@ -124,17 +119,18 @@ def drawGraph(orderedMaxD):
     plt.ylabel('5 min distance');
     plt.plot(range(len(orderedMaxD)), orderedMaxD, '-r');
     plt.show();
-    plt.close();
     
 def drawAlgStats(results, title):
     plt.rcParams['axes.facecolor'] = 'lightgrey';
     plt.title(title);
+    
     plt.plot(results[:,0], results[:,1], '-r', label='randIndex');
     plt.plot(results[:,0], results[:,2], '-b', label='precision');
     plt.plot(results[:,0], results[:,3], '-w', label='f1');
     plt.plot(results[:,0], results[:,4], '-g', label='adjRand');
+    plt.legend(loc="best");
+    plt.savefig(title, dpi=300);
     plt.show();
-    plt.close();
 
 feats = getFeatures();
 
@@ -143,12 +139,11 @@ feats = getFeatures();
 #print(prob)
 #n_Feats = 7 (depois de analizar o fClassif)
 nFeats = 9;
-print(len(feats[0]))
 feats = SelectKBest(f_classif,k=nFeats).fit_transform(feats,labels)
-print(len(feats[0]))
-bestPrecision, bestL = bestDBScan(feats);
-bestKMeans(feats);
-print('DBScan:',computeAlgRand(bestL, labels),silhouette_score(feats,bestL));
+bestL = bestDBScan(feats);
+bestLabels = bestKMeans(feats);
+print('DBScan:',computeAlgRand(bestL, labels),', Silhouette Score: ',silhouette_score(feats,bestL));
+print('KMeans:',computeAlgRand(bestLabels, labels),', Silhouette Score: ', silhouette_score(feats,bestLabels));
 #drawGraph(neighbor(getFeatures()));
 #standartscaler
     
