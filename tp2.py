@@ -1,6 +1,7 @@
 from sklearn.manifold import TSNE, Isomap;
 from sklearn.decomposition import PCA;
 import numpy as np;
+from sklearn.metrics import silhouette_score
 from tp2_aux import images_as_matrix;
 from sklearn.manifold import Isomap;
 from sklearn.cluster import DBSCAN;
@@ -86,13 +87,17 @@ def bestKMeans(feats):
 
 def bestDBScan(feats):
     results = [];
-    for epsil in range(10,50):
+    bestEpsil = bestPrecision= 0.0;
+    for epsil in range(30,50):
         region = DBSCAN(eps=epsil, min_samples=5).fit(feats);
         randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
+        if precision > bestPrecision:
+                bestPrecision = precision;
+                bestEpsil = epsil;
         results.append([epsil,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
     results = np.array(results);
     drawAlgStats(results, 'DbScan stats');
-    return results;
+    return bestEpsil;
 
 def drawGraph(orderedMaxD):
     plt.rcParams['axes.facecolor'] = 'lightgrey';
@@ -112,8 +117,13 @@ def drawAlgStats(results, title):
     plt.plot(results[:,0], results[:,4], '-g', label='adjRand');
     plt.show();
     plt.close();
-    
-bestKMeans(getFeatures());
+
+feats = getFeatures();
+bestPrecision = bestDBScan(feats);
+print(bestPrecision);
+bestKMeans(feats);
+dbscanLabels = DBSCAN(eps = bestPrecision, min_samples = 5).fit(feats).labels_;
+print('DBScan:',computeAlgRand(dbscanLabels, labels),silhouette_score(feats,dbscanLabels));
 #drawGraph(neighbor(getFeatures()));
 #standartscaler
     
