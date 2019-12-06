@@ -1,7 +1,7 @@
 from sklearn.manifold import TSNE, Isomap;
 from sklearn.decomposition import PCA;
 import numpy as np;
-from tp2_aux import images_as_matrix;
+from tp2_aux import images_as_matrix,report_clusters;
 from sklearn.manifold import Isomap;
 from sklearn.cluster import DBSCAN;
 from sklearn.preprocessing import StandardScaler;
@@ -18,11 +18,13 @@ scaledMatrix = scaler.fit_transform(matrix);
 def readFromFile(fileName):
     text = open(fileName).readlines();
     values=[];
+    idd = [];
     for lin in text:
         va = lin.split(",");
         values.append(int(va[1].split('\n')[0]));
-    return np.array(values);
-labels = readFromFile("labels.txt");
+        idd.append(int(va[0]));
+    return np.array(values),np.array(idd);
+labels,ids = readFromFile("labels.txt");
 
 def combineHorizontaly(A,B):
     shA=np.shape(A);
@@ -76,19 +78,28 @@ def neighbor(feats):
 
 def bestKMeans(feats):
     results = [];
+    bestP = 0;
+    bestK = 2;
+    bestLabels = []
     for n_clusters in range(2,30):
-        region = KMeans(n_clusters=n_clusters).fit(feats);
-        randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
+        region = KMeans(n_clusters=n_clusters).fit_predict(feats);
+        randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region,labels);
         results.append([n_clusters,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
+        if bestP<=precision:
+            bestP = precision
+            bestK = n_clusters
+            bestLabels = region
     results = np.array(results);
-    drawAlgStats(results, 'Kmeans stats');
+    #drawAlgStats(results, 'Kmeans stats');
+    print(bestK)
+    report_clusters(ids,bestLabels,"text.html");
     return results;
 
 def bestDBScan(feats):
     results = [];
     for epsil in range(10,50):
-        region = DBSCAN(eps=epsil, min_samples=5).fit(feats);
-        randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
+        region = DBSCAN(eps=epsil, min_samples=5).fit_predict(feats);
+        randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region,labels);
         results.append([epsil,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
     results = np.array(results);
     drawAlgStats(results, 'DbScan stats');
