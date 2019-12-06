@@ -1,4 +1,4 @@
-Atenção:
+﻿Atenção:
 - Não edite este ficheiro em programas como Word e afins. Use exclusivamente um editor de texto simples. Em caso de dúvida, use o editor do Spyder.
 - Não altere a estrutura deste ficheiro. Preencha as respostas apenas nos espaços respectivos (a seguir à tag R#:)
 - Pode adicionar linhas no espaço para as respostas mas as respostas devem ser sucintas e directas.
@@ -11,29 +11,31 @@ refere um ficheiro de imagem teste.png na mesma pasta deste documento.
 QUESTÔES:
 
 Q1: Explique como seleccionou os melhores atributos para a fase de clustering. Em particular, os métodos de visualização usados para explorar os 18 atributos extraídos e quaisquer testes estatísticos usados.
-R1:
+R1: Utilizamos o  f_classif para selecionar o numero de features e o SelectKBest para selecionar as melhores features.
 
 
 Q2: Depois de seleccionar os atributos, standardizou ou normalizou os valores? Justifique a sua decisão.
-R2:
+R2: Sim, foi standardizado para igualar o intervalo de valores e variabilidade dos dados
 
 
 Q3: Explique como encontrou o valor do raio da vizinhança (epsilon) para o algoritmo de DBSCAN pelo procedimento descrito no artigo "A density-based algorithm for discovering clusters in large spatial databases with noise".
-R3:
+R3:Usando o classificador K-neighbors em que para cada ponto se obteve a distancia ao seu 5º vizinho mais próximo construindo um k-distance graph com estes valores. Após o gráfico ser gerido foi manualmente analisado encontrado o intervalo de melhores valores de epsil no "cotovelo" do gráfico
+uma vez que o valor certo não é intuitivo. Sendo este intervalo depois testado para descobrir qual o melhor.
+
 
 
 Q4: Examinando os clusters gerados pelo algoritmo DBSCAN com o valor otimizado pelo método descrito no artigo, parece-lhe que o resultado é adequado para aglomerar estas imagens? Justifique a sua resposta.
-R4:
+R4: São muitos poucos clusters o que nos leva a não achar este resultado adequado.
 
 
 Q5: Descreva a sua análise dos parâmetros k (para K-Means) e epsilon (para DBSCAN) usando os indicadores internos e externos indicados no enunciado. Inclua os dois gráficos com os valores dos indicadores (indicando o nome da imagem de cada plot numa linha da resposta) em função dos parâmetros k e epsilon e descreva a escolha dos intervalos nos quais examinou estes parâmetros. Indique, justificando, que conclusões pode tirar desta análise.
-R5:
+R5: O parâmetro usado para escolher o melhor valor de k e epsilon foi a precision.
 
 Q6: Seleccione alguns valores dos parâmetros testados na questão cinco e examine os clusters correspondentes com mais atenção, gerando o ficheiro HTML com as imagens. Justifique a escolha destes valores, discuta as diferentes opções e proponha uma recomendação que poderia ajudar a tarefa dos biólogos de classificar as células e rejeitar erros de segmentação.
-R6:
+R6: Só analizamos a precision.
 
 Q7: Discuta vantagens, problemas ou otros aspectos destes dois algoritmos (K-Means e DBSCAN) que considere relevantes para ajudar os biólogos a organizar estas imagens, considerando o seu conhecimento teórico destes algoritmos bem como os resultados que obteve no seu trabalho.
-R7:
+R7: 
 
 Q8: Considere outros algoritmos de clustering implementados na biblioteca Scikit-Learn. Escolha um e aplique-o a este problema, optimizando os parâmetros que julgar adequado da forma que lhe parecer melhor. Justifique a sua escolha e discuta se esta opção daria resultados mais úteis para os biólogos.
 R8:
