@@ -20,10 +20,9 @@ def readFromFile(fileName):
     values=[];
     for lin in text:
         va = lin.split(",");
-        values.append(va[1].split('\n')[0]);
-    return values;
+        values.append(int(va[1].split('\n')[0]));
+    return np.array(values);
 labels = readFromFile("labels.txt");
-print(labels);
 
 def combineHorizontaly(A,B):
     shA=np.shape(A);
@@ -80,6 +79,7 @@ def bestKMeans(feats):
         randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
         results.append([n_clusters,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
     results = np.array(results);
+    drawAlgStats(results, 'Kmeans stats');
     return results;
 
 def bestDBScan(feats):
@@ -89,6 +89,7 @@ def bestDBScan(feats):
         randIndex, precision, recall, f1, adjRandIndex = computeAlgRand(region.labels_,labels);
         results.append([epsil,randIndex,precision,recall,f1,adjRandIndex,silhouette_score(feats,labels)]);
     results = np.array(results);
+    drawAlgStats(results, 'DbScan stats');
     return results;
 
 def drawGraph(orderedMaxD):
@@ -98,9 +99,20 @@ def drawGraph(orderedMaxD):
     plt.ylabel('5 min distance');
     plt.plot(range(len(orderedMaxD)), orderedMaxD, '-r');
     plt.show();
+    plt.close();
     
+def drawAlgStats(results, title):
+    plt.rcParams['axes.facecolor'] = 'lightgrey';
+    plt.title(title);
+    plt.plot(results[:,0], results[:,1], '-r', label='randIndex');
+    plt.plot(results[:,0], results[:,2], '-r', label='precision');
+    plt.plot(results[:,0], results[:,3], '-r', label='f1');
+    plt.plot(results[:,0], results[:,4], '-r', label='adjRand');
+    plt.show();
+    plt.close();
+    
+bestKMeans(getFeatures());
 #drawGraph(neighbor(getFeatures()));
-
 #standartscaler
     
     
