@@ -23,7 +23,6 @@ def readFromFile(fileName):
         values.append(va[1].split('\n')[0]);
     return values;
 labels = readFromFile("labels.txt");
-print(labels);
 
 def combineHorizontaly(A,B):
     shA=np.shape(A);
@@ -38,10 +37,12 @@ def combineHorizontaly(A,B):
 def computeAlgRand(labels, noLabel):
     trueP = trueN = sameC = sameP = 0.0;
     for i in range(len(labels)-1):
-        sameC= np.sum(labels[i] == labels[i+1:]);
-        sameP = np.sum(noLabel[i] == noLabel[i+1:]);
-        trueP += np.sum(np.logical_and(sameC, sameP));
-        trueN += np.sum(np.logical_not(np.logical_or(sameC, sameP)));
+        sc = labels[i] == labels[i+1:];
+        sp = noLabel[i] == noLabel[i+1:];
+        sameC += np.sum(sc);
+        sameP += np.sum(sp);
+        trueP += np.sum(np.logical_and(sc, sp));
+        trueN += np.sum(np.logical_not(np.logical_or(sc,sp)));
     rand = (trueP+trueN)/((len(labels)*(len(labels)-1))/2);
     precision = trueP/sameC;
     recall = trueP/sameP;
@@ -106,9 +107,9 @@ def drawAlgStats(results, title):
     plt.rcParams['axes.facecolor'] = 'lightgrey';
     plt.title(title);
     plt.plot(results[:,0], results[:,1], '-r', label='randIndex');
-    plt.plot(results[:,0], results[:,2], '-r', label='precision');
-    plt.plot(results[:,0], results[:,3], '-r', label='f1');
-    plt.plot(results[:,0], results[:,4], '-r', label='adjRand');
+    plt.plot(results[:,0], results[:,2], '-b', label='precision');
+    plt.plot(results[:,0], results[:,3], '-w', label='f1');
+    plt.plot(results[:,0], results[:,4], '-g', label='adjRand');
     plt.show();
     plt.close();
     
